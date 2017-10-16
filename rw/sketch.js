@@ -1,23 +1,47 @@
-var roster = new Roster(2, 2)
-var battle = new Battle([roster.robots[0], roster.robots[1]]);
+var roster = new Roster(100, 2);
+var ffwdButton;
+var ffwd = true;
 
 
 function setup() {
   createCanvas(1000, 1000);
-  battle.next();
+  roster.createBattle();
+  ffwdButton = createButton("Fast Forward").position(500,0);
+  ffwdButton.mousePressed(_=> ffwd = !ffwd);
 }
 
 function draw() {
-  battle.draw();
-  battle.next();
+  if (ffwd) {
+    try {
+      roster.quickgen();
+    } catch(e) {}
+
+  } else {
+    roster.battle.draw();
+    if (roster.battle.isDone) {
+      if (roster.allBattlesDone()) {
+        roster.learn();
+        roster.reset();
+      }
+      roster.createBattle()
+    }
+    roster.battle.next();
+  } 
+  stroke("black")
+  strokeWeight(1);
+  text(roster.round,900, 10)
+  console.log(roster.round)
+
+  
 }
 
 /**
-process actions
-make array fo entities
-handle thinking and brains
--> do brain generation in roster
-reproduce
-deazone to incentivize pushing
-velocity - accelleration, decelleration
+
+Body mutation
+
+fast forward
+reduce health on contact
+
+
+
 */

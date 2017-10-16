@@ -29,10 +29,10 @@ Collision.Circle.prototype.contains = function(xy) {
 }
 
 Collision.euclidean = function(xy1, xy2) {
-  return Math.sqrt(Math.abs(xy1.x - xy2.x) + Math.abs(xy1.y - xy2.y));
+  return Math.sqrt(Math.pow(xy1.x - xy2.x, 2) + Math.pow(xy1.y - xy2.y, 2));
 }
 
-Collision.Circle.collidesWithCircle = function(c2) {
+Collision.Circle.prototype.collidesWithCircle = function(c2) {
   var c1 = this;
   var smallerCircle = c1.radius < c2.radius ? c1 : c2;
   var largerCircle = smallerCircle === c1 ? c2 : c1;
@@ -60,6 +60,20 @@ Collision.collide = function(r1, r2) {
     var m2 = r2.totalWeight();
 
   }
+}
+
+Collision.closestDistance = function(point1, points) {
+  var distances = points
+      .map(point2 => Math.abs(Collision.euclidean(point1, point2)));
+  return Math.min.apply(null, distances);
+}
+
+Collision.closestPoint = function(point1, points) {
+  var distances = points
+      .map(point2 => Math.abs(Collision.euclidean(point1, point2)));
+
+  var smallestDistance = Math.min.apply(null, distances);
+  return points[distances.indexOf(smallestDistance)];
 }
 
 

@@ -52,7 +52,7 @@ Robot.prototype.draw = function() {
   strokeWeight(0);
   fill(this.torque * 256, this.speed * 25.6, this.shield * 25.6);
   ellipse(this.x, this.y, size, size);
-  stroke(this.weaponDamage * 25.6, 0, 0);
+  stroke(this.weaponDamage * 25.6, 255 * this.isAttacking, 0);
 
   strokeWeight(4);
   var arcStart = this.rotation - this.weaponAngle / 2;
@@ -86,4 +86,25 @@ Robot.prototype.think = function(battle) {
     enemySpeed: r2.speed,
     enemyTorque: r2.torque
   });
+}
+
+Robot.prototype.collidesWith = function(r2) {
+  var r1 = this;
+  var c1 = new Collision.Circle(r1.x, r1.y, r1.radius());
+  var c2 = new Collision.Circle(r2.x, r2.y, r2.radius());
+  return c1.collidesWithCircle(c2);
+}
+
+
+Robot.prototype.mutate = function() {
+  var which = Math.random() <= 2 ? "Brain" : "Body"; // to cange to 0.5
+  if (which === "Brain") {
+    this.brain.mutate();
+  } else {
+    this.mutateBody();
+  }
+  return this;
+}
+
+Robot.prototype.mutateBody = function() {
 }
